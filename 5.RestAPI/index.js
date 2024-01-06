@@ -20,6 +20,51 @@ app.use(express.static('public'));
 // app.use(morgan('tiny'));
 // app.use(morgan('common'));
 
+// ===================MIDDLEWARES================================
+
+const createProduct = (req, res) => {
+  console.log(req.body);
+  products.push(req.body);
+  res.json({ type: 'POST' });
+};
+
+const getAllProduct = (req, res) => {
+  res.json(products);
+};
+
+const getProductById = (req, res) => {
+  const id = +req.params.id;
+
+  const product = products.find((p) => p.id === id);
+
+  res.json(product);
+};
+
+const updateProductUsingPut = (req, res) => {
+  const id = +req.params.id;
+  const productIndex = products.findIndex((p) => p.id === id);
+  products[productIndex] = req.body;
+  res.status(201).json({ type: 'PUT' });
+};
+
+const updateProductUsingPatch = (req, res) => {
+  const id = +req.params.id;
+  const productIndex = products.findIndex((p) => p.id === id);
+  const product = products[productIndex];
+  products.splice(productIndex, 1, { ...product, ...req.body });
+  res.status(201).json({ type: 'PATCH' });
+};
+
+const deleteProductById = (req, res) => {
+  const id = +req.params.id;
+  const productIndex = products.findIndex((p) => p.id === id);
+  const product = products[productIndex];
+  products.splice(productIndex, 1);
+  res.status(201).json({ type: 'DELETE' });
+};
+
+//===============================================================
+
 const auth = (req, res, next) => {
   console.log(req.query);
   if (req.body.password === 'admin') {
@@ -29,63 +74,33 @@ const auth = (req, res, next) => {
   }
 };
 
-// app.use(auth);
-// API - ENDPOINTS / ROUTES
+//=================================================================
 
-app.get('/', (req, res) => {
-  res.send('<h1>Hello World</h1>');
-});
+//CREATE POST /products
+app.post('/products', createProduct);
 
 //products
 // API Root , base url, entry point
 //Read GET
-app.get('/products', (req, res) => {
-  res.json(products);
-});
+app.get('/products', getAllProduct);
 
 //READ GET
-app.get('/products/:id', (req, res) => {
-  const id = +req.params.id;
-
-  const product = products.find((p) => p.id === id);
-
-  res.json(product);
-});
-
-//CREATE POST /products
-app.post('/products', (req, res) => {
-  console.log(req.body);
-  products.push(req.body);
-  res.json({ type: 'POST' });
-});
+app.get('/products/:id', getProductById);
 
 //READ PUT /products
 
-app.put('/products/:id', (req, res) => {
-  const id = +req.params.id;
-  const productIndex = products.findIndex((p) => p.id === id);
-  products[productIndex] = req.body;
-  res.status(201).json({ type: 'PUT' });
-});
+app.put('/products/:id', updateProductUsingPut);
 
 //PATCH /products
 
-app.patch('/products/:id', (req, res) => {
-  const id = +req.params.id;
-  const productIndex = products.findIndex((p) => p.id === id);
-  const product = products[productIndex];
-  products.splice(productIndex, 1, { ...product, ...req.body });
-  res.status(201).json({ type: 'PATCH' });
-});
+app.patch('/products/:id', updateProductUsingPatch);
 
 //DELETE /products
-app.delete('/products/:id', (req, res) => {
-  const id = +req.params.id;
-  const productIndex = products.findIndex((p) => p.id === id);
-  const product = products[productIndex];
-  products.splice(productIndex, 1);
-  res.status(201).json({ type: 'DELETE' });
-});
+app.delete('/products/:id', deleteProductById);
+
+//=================================================================
+
+//==================Operations Performend ===============================
 
 app.get('/about', (req, res) => {
   res.send('<h1>About Us</h1>');
