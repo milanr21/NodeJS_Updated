@@ -1,36 +1,22 @@
-const express = require('express');
+const express = require("express");
 
 const app = express();
 
-const morgan = require('morgan');
+const morgan = require("morgan");
 
-const productController = require('./controller/product');
-const productRouter = express.Router();
+const productRoutes = require("./routes/productRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 //======body Parser=============================================
 app.use(express.json());
 
 // Used for static hosting
-app.use(express.static('public'));
+app.use(express.static("public"));
 
-app.use('/api', productRouter);
+app.use("/products", productRoutes);
+app.use("/users", userRoutes);
 
 //================Modal-Veiw-Controller===============================
-
-//CREATE POST /products
-productRouter
-  .post('/products', productController.createProduct)
-
-  .get('/products', productController.getAllProduct)
-
-  .get('/products/:id', productController.getProductById)
-
-  .put('/products/:id', productController.updateProductUsingPut);
-
-app.patch('/products/:id', productController.updateProductUsingPatch);
-
-//DELETE /products
-app.delete('/products/:id', productController.deleteProductById);
 
 //=================================================================
 

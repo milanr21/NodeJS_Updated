@@ -1,6 +1,6 @@
-const fs = require('fs');
+const fs = require("fs");
 
-const data = JSON.parse(fs.readFileSync('data.json', 'utf-8'));
+const data = JSON.parse(fs.readFileSync("data.json", "utf-8"));
 const products = data.products;
 
 // ===================MIDDLEWARES================================
@@ -8,7 +8,7 @@ const products = data.products;
 exports.createProduct = (req, res) => {
   console.log(req.body);
   products.push(req.body);
-  res.json({ type: 'POST' });
+  res.json({ type: "POST" });
 };
 
 exports.getAllProduct = (req, res) => {
@@ -27,7 +27,7 @@ exports.updateProductUsingPut = (req, res) => {
   const id = +req.params.id;
   const productIndex = products.findIndex((p) => p.id === id);
   products[productIndex] = req.body;
-  res.status(201).json({ type: 'PUT' });
+  res.status(201).json({ type: "PUT" });
 };
 
 exports.updateProductUsingPatch = (req, res) => {
@@ -35,7 +35,7 @@ exports.updateProductUsingPatch = (req, res) => {
   const productIndex = products.findIndex((p) => p.id === id);
   const product = products[productIndex];
   products.splice(productIndex, 1, { ...product, ...req.body });
-  res.status(201).json({ type: 'PATCH' });
+  res.status(201).json({ type: "PATCH" });
 };
 
 exports.deleteProductById = (req, res) => {
@@ -43,5 +43,5 @@ exports.deleteProductById = (req, res) => {
   const productIndex = products.findIndex((p) => p.id === id);
   const product = products[productIndex];
   products.splice(productIndex, 1);
-  res.status(201).json({ type: 'DELETE' });
+  res.status(201).json({ type: "DELETE" });
 };
